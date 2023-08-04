@@ -20,19 +20,19 @@ const initialNodes = [
     id: "Title",
     type: "titleNode",
     position: { x: 0, y: 0 },
-    data: { value: 123 },
+    data: null,
   },
   {
     id: "Task-1",
     type: "taskNode",
     position: { x: 12, y: 400 },
-    data: { value: 100 },
+    data: { title: "Title", description: "description", done: false },
   },
   {
     id: "Issue-1",
     type: "issueNode",
     position: { x: 12, y: 800 },
-    data: { value: 200 },
+    data: { title: "Title", description: "description", done: false },
   },
 ]
 
