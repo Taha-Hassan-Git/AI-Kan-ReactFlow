@@ -23,6 +23,7 @@ type RFState = {
   updateNodeChecked: (nodeId: string) => void
   removeNode: (nodeId: string) => void
   addTaskNode: () => void
+  addIssueNode: (nodeId: string) => void
 }
 
 const initialNodes: Node[] = [
@@ -125,6 +126,33 @@ export const useStore = create<RFState>((set, get) => ({
         {
           id: timestamp,
           source: "Title",
+          target: timestamp,
+          style: { stroke: "black", strokeWidth: 3 },
+        },
+      ],
+    }))
+  },
+  addIssueNode: (nodeId: string) => {
+    const timestamp = new Date().getUTCMilliseconds().toString()
+    set(state => ({
+      nodes: [
+        ...state.nodes,
+        {
+          id: timestamp,
+          type: "issueNode",
+          position: { x: 100, y: 800 },
+          data: {
+            title: "Title",
+            description: "Description",
+            done: false,
+          },
+        },
+      ],
+      edges: [
+        ...state.edges,
+        {
+          id: timestamp,
+          source: nodeId,
           target: timestamp,
           style: { stroke: "black", strokeWidth: 3 },
         },

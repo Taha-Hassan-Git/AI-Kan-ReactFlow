@@ -7,6 +7,7 @@ const TaskNode = ({ id, data }) => {
   const updateNodeDescription = useStore(state => state.updateNodeDescription)
   const updateNodeChecked = useStore(state => state.updateNodeChecked)
   const removeNode = useStore(state => state.removeNode)
+  const addIssueNode = useStore(state => state.addIssueNode)
   return (
     <div
       className={`${card} ${
@@ -46,7 +47,7 @@ const TaskNode = ({ id, data }) => {
           !data.done ? "border-black" : "border-gray-400"
         } TestTaskDescription`}
       ></textarea>
-      <button>+</button>
+      <button onClick={() => addIssueNode(id)}>+</button>
       <Handle type="source" position={Position.Bottom} id="c" />
     </div>
   )
