@@ -1,10 +1,10 @@
 import { Handle, Position } from "reactflow"
 import { card } from "../../Styles/TailwindClasses"
-import { useStreamContext } from "../../Context/store"
+import { useStreamContext, useStore } from "../../Context/store"
 
 const TitleNode = ({ data }) => {
   const { onSubmit, projectInput, setProjectInput } = useStreamContext()
-  console.log(data)
+  const addTaskNode = useStore(state => state.addTaskNode)
   return (
     <>
       <div
@@ -34,6 +34,7 @@ const TitleNode = ({ data }) => {
             Submit
           </button>
         </form>
+        <button onClick={() => addTaskNode()}>+</button>
       </div>
       <Handle type="source" position={Position.Bottom} id="a" />
     </>

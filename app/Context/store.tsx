@@ -22,6 +22,7 @@ type RFState = {
   updateNodeDescription: (nodeId: string, text: string) => void
   updateNodeChecked: (nodeId: string) => void
   removeNode: (nodeId: string) => void
+  addTaskNode: () => void
 }
 
 const initialNodes: Node[] = [
@@ -72,7 +73,6 @@ export const useStore = create<RFState>((set, get) => ({
     set({
       nodes: get().nodes.map(node => {
         if (node.id === nodeId) {
-          // it's important to create a new object here, to inform React Flow about the cahnges
           node.data = { ...node.data, title: text }
         }
 
@@ -84,7 +84,6 @@ export const useStore = create<RFState>((set, get) => ({
     set({
       nodes: get().nodes.map(node => {
         if (node.id === nodeId) {
-          // it's important to create a new object here, to inform React Flow about the cahnges
           node.data = { ...node.data, description: text }
         }
 
@@ -104,6 +103,33 @@ export const useStore = create<RFState>((set, get) => ({
   },
   removeNode: (nodeId: string) => {
     set({ nodes: get().nodes.filter(node => node.id !== nodeId) })
+  },
+  addTaskNode: () => {
+    const timestamp = new Date().getUTCMilliseconds().toString()
+    set(state => ({
+      nodes: [
+        ...state.nodes,
+        {
+          id: timestamp,
+          type: "taskNode",
+          position: { x: 100, y: 400 },
+          data: {
+            title: "Title",
+            description: "Description",
+            done: false,
+          },
+        },
+      ],
+      edges: [
+        ...state.edges,
+        {
+          id: timestamp,
+          source: "Title",
+          target: timestamp,
+          style: { stroke: "black", strokeWidth: 3 },
+        },
+      ],
+    }))
   },
 }))
 

@@ -46,6 +46,7 @@ const TaskNode = ({ id, data }) => {
           !data.done ? "border-black" : "border-gray-400"
         } TestTaskDescription`}
       ></textarea>
+      <button>+</button>
       <Handle type="source" position={Position.Bottom} id="c" />
     </div>
   )
