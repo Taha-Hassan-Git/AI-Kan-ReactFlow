@@ -4,6 +4,7 @@ import { useStore } from "../../Context/store"
 
 const IssueNode = ({ id, data }) => {
   const updateNodeTitle = useStore(state => state.updateNodeTitle)
+  const updateNodeDescription = useStore(state => state.updateNodeDescription)
   return (
     <div
       className={`${card} ${
@@ -33,6 +34,7 @@ const IssueNode = ({ id, data }) => {
         rows={4}
         cols={20}
         value={data.description}
+        onChange={evt => updateNodeDescription(id, evt.target.value)}
         className={`mb-2 p-2 resize-none rounded border ${
           !data.done ? "border-black" : "border-gray-400"
         } TestIssueDescription text-ellipsis overflow-scroll`}

@@ -19,6 +19,7 @@ type RFState = {
   edges: Edge[]
   onNodesChange: OnNodesChange
   updateNodeTitle: (nodeId: string, text: string) => void
+  updateNodeDescription: (nodeId: string, text: string) => void
 }
 
 const initialNodes: Node[] = [
@@ -71,6 +72,18 @@ export const useStore = create<RFState>((set, get) => ({
         if (node.id === nodeId) {
           // it's important to create a new object here, to inform React Flow about the cahnges
           node.data = { ...node.data, title: text }
+        }
+
+        return node
+      }),
+    })
+  },
+  updateNodeDescription: (nodeId: string, text: string) => {
+    set({
+      nodes: get().nodes.map(node => {
+        if (node.id === nodeId) {
+          // it's important to create a new object here, to inform React Flow about the cahnges
+          node.data = { ...node.data, description: text }
         }
 
         return node

@@ -30,10 +30,7 @@ const nodeTypes = {
 function Project() {
   const streamContext = useStreamContext()
   const stream = streamContext?.stream
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
-    selector,
-    shallow
-  )
+  const { nodes, edges, onNodesChange } = useStore(selector, shallow)
 
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
