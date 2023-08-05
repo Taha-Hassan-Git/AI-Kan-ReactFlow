@@ -12,6 +12,7 @@ import TaskNode from "./TasKNode"
 import IssueNode from "./IssueNode"
 import { shallow } from "zustand/shallow"
 import { useStore } from "../../Context/store"
+import { blankProject, exampleProject } from "../../data/data"
 
 const selector = state => ({
   nodes: state.nodes,
@@ -32,6 +33,8 @@ function Project() {
   const stream = streamContext?.stream
   const { nodes, edges, onNodesChange } = useStore(selector, shallow)
 
+  const setProject = useStore(state => state.setProject)
+
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
       <ReactFlow
@@ -51,7 +54,18 @@ function Project() {
           <button>Sign Out</button>
         </Panel>
         <Panel position="top-right">
-          <button>Clear Project</button>
+          <button
+            onClick={() => setProject(blankProject)}
+            className="border border-black bg-gray-50 p-1.5 rounded ml-5"
+          >
+            Clear Project
+          </button>
+          <button
+            className="border border-black bg-gray-50 p-1.5 rounded ml-5"
+            onClick={() => setProject(exampleProject)}
+          >
+            Example Project
+          </button>
         </Panel>
         {stream && <Panel position="bottom-center">{stream}</Panel>}
         <Controls />

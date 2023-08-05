@@ -24,9 +24,12 @@ type RFState = {
   removeNode: (nodeId: string) => void
   addTaskNode: () => void
   addIssueNode: (nodeId: string, position: { x: number; y: number }) => void
+  setProject: (project: { nodes: Node[]; edges: Edge[] }) => void
 }
 
-const initialNodes: Node[] = [
+const strokeStyle = { stroke: "black", strokeWidth: 3 }
+
+export const initialNodes: Node[] = [
   {
     id: "Title",
     type: "titleNode",
@@ -35,9 +38,7 @@ const initialNodes: Node[] = [
   },
 ]
 
-const initialEdges: Edge[] = []
-
-const strokeStyle = { stroke: "black", strokeWidth: 3 }
+export const initialEdges: Edge[] = []
 
 export const useStore = create<RFState>((set, get) => ({
   nodes: initialNodes,
@@ -135,6 +136,9 @@ export const useStore = create<RFState>((set, get) => ({
         },
       ],
     }))
+  },
+  setProject: (project: { nodes: Node[]; edges: Edge[] }) => {
+    set(() => ({ nodes: project.nodes, edges: project.edges }))
   },
 }))
 
