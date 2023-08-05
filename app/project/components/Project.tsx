@@ -60,7 +60,10 @@ function Project() {
           >
             Clear Project
           </button>
-          <button onClick={() => setProject(exampleProject)}>
+          <button
+            className="border border-black bg-gray-50 p-1.5 rounded ml-5"
+            onClick={() => setProject(exampleProject)}
+          >
             Example Project
           </button>
         </Panel>
