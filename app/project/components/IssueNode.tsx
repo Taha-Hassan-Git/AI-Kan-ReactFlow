@@ -5,6 +5,7 @@ import { useStore } from "../../Context/store"
 const IssueNode = ({ id, data }) => {
   const updateNodeTitle = useStore(state => state.updateNodeTitle)
   const updateNodeDescription = useStore(state => state.updateNodeDescription)
+  const updateNodeChecked = useStore(state => state.updateNodeChecked)
   return (
     <div
       className={`${card} ${
@@ -16,6 +17,7 @@ const IssueNode = ({ id, data }) => {
         <input
           type="checkbox"
           checked={data.done}
+          onChange={() => updateNodeChecked(id)}
           className={`TestIssueCheckbox cursor-pointer`}
         ></input>
         <button type="button" className={`TestIssueDelete`}>

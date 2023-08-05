@@ -20,6 +20,7 @@ type RFState = {
   onNodesChange: OnNodesChange
   updateNodeTitle: (nodeId: string, text: string) => void
   updateNodeDescription: (nodeId: string, text: string) => void
+  updateNodeChecked: (nodeId: string) => void
 }
 
 const initialNodes: Node[] = [
@@ -86,6 +87,16 @@ export const useStore = create<RFState>((set, get) => ({
           node.data = { ...node.data, description: text }
         }
 
+        return node
+      }),
+    })
+  },
+  updateNodeChecked: (nodeId: string) => {
+    set({
+      nodes: get().nodes.map(node => {
+        if (node.id === nodeId) {
+          node.data = { ...node.data, done: !node.data.done }
+        }
         return node
       }),
     })
