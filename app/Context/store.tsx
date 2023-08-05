@@ -1,21 +1,90 @@
 "use client"
 
 import { ReactNode, createContext, useContext, useState } from "react"
+import { create } from "zustand"
+import {
+  Connection,
+  Edge,
+  EdgeChange,
+  Node,
+  NodeChange,
+  addEdge,
+  OnNodesChange,
+  OnEdgesChange,
+  OnConnect,
+  applyNodeChanges,
+  applyEdgeChanges,
+} from "reactflow"
+import { StreamContextProps } from "../types/types"
 import sanitise from "../../utils/sanitise"
 
-interface StreamContextProps {
-  projectInput: string
-  setProjectInput: React.Dispatch<React.SetStateAction<string>>
-  error: string
-  setError: React.Dispatch<React.SetStateAction<string>>
-  stream: string
-  setStream: React.Dispatch<React.SetStateAction<string>>
-  isLoading: boolean
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
-  isCleared: boolean
-  setIsCleared: React.Dispatch<React.SetStateAction<boolean>>
-  onSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>
+// Zustand Node State Management
+
+type RFState = {
+  nodes: Node[]
+  edges: Edge[]
+  onNodesChange: OnNodesChange
+  onEdgesChange: OnEdgesChange
+  onConnect: OnConnect
 }
+
+const initialNodes: Node[] = [
+  {
+    id: "Title",
+    type: "titleNode",
+    position: { x: 0, y: 0 },
+    data: null,
+  },
+  {
+    id: "Task-1",
+    type: "taskNode",
+    position: { x: 12, y: 400 },
+    data: { title: "Title", description: "description", done: false },
+  },
+  {
+    id: "Issue-1",
+    type: "issueNode",
+    position: { x: 12, y: 800 },
+    data: { title: "Title", description: "description", done: false },
+  },
+]
+
+const initialEdges: Edge[] = [
+  {
+    id: "edges-Title-Task1",
+    source: "Title",
+    target: "Task-1",
+    style: { stroke: "black", strokeWidth: 3 },
+  },
+  {
+    id: "edges-Task1-Issue1",
+    source: "Task-1",
+    target: "Issue-1",
+    style: { stroke: "black", strokeWidth: 3 },
+  },
+]
+
+export const useStore = create<RFState>((set, get) => ({
+  nodes: initialNodes,
+  edges: initialEdges,
+  onNodesChange: (changes: NodeChange[]) => {
+    set({
+      nodes: applyNodeChanges(changes, get().nodes),
+    })
+  },
+  onEdgesChange: (changes: EdgeChange[]) => {
+    set({
+      edges: applyEdgeChanges(changes, get().edges),
+    })
+  },
+  onConnect: (connection: Connection) => {
+    set({
+      edges: addEdge(connection, get().edges),
+    })
+  },
+}))
+
+// Context for API call data stream.
 
 const StreamContext = createContext<StreamContextProps | undefined>(undefined)
 
