@@ -1,7 +1,9 @@
 import { card } from "../../Styles/TailwindClasses"
 import { Handle, Position } from "reactflow"
+import { useStore } from "../../Context/store"
 
-const TaskNode = ({ data }) => {
+const TaskNode = ({ id, data }) => {
+  const updateNodeTitle = useStore(state => state.updateNodeTitle)
   return (
     <div
       className={`${card} ${
@@ -25,6 +27,7 @@ const TaskNode = ({ data }) => {
           !data.done ? "border-black" : "border-gray-400"
         } TestTaskTitle`}
         value={data.title}
+        onChange={evt => updateNodeTitle(id, evt.target.value)}
       />
       <textarea
         rows={5}
