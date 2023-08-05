@@ -152,6 +152,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   const [stream, setStream] = useState("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isCleared, setIsCleared] = useState<boolean>(true)
+  const setProject = useStore(state => state.setProject)
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -219,17 +220,17 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
 
     const finalData = streamedData.join("")
 
-    const sanitisedData = sanitise(finalData)
+    const newProject = sanitise(finalData)
 
-    if (sanitisedData === "not valid object") {
+    if (newProject === "not valid object") {
       setError("OpenAI returned invalid JSON \n Try re-sending request.")
       setTimeout(() => setError(""), time + 1500)
       setIsLoading(false)
       return
     }
-
     setStream("")
     setIsLoading(false)
+    setProject(newProject)
   }
 
   return (
