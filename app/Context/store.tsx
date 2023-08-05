@@ -23,7 +23,7 @@ type RFState = {
   updateNodeChecked: (nodeId: string) => void
   removeNode: (nodeId: string) => void
   addTaskNode: () => void
-  addIssueNode: (nodeId: string) => void
+  addIssueNode: (nodeId: string, position: { x: number; y: number }) => void
 }
 
 const initialNodes: Node[] = [
@@ -33,34 +33,11 @@ const initialNodes: Node[] = [
     position: { x: 0, y: 0 },
     data: null,
   },
-  {
-    id: "Task-1",
-    type: "taskNode",
-    position: { x: 12, y: 400 },
-    data: { title: "Title", description: "description", done: false },
-  },
-  {
-    id: "Issue-1",
-    type: "issueNode",
-    position: { x: 12, y: 800 },
-    data: { title: "Title", description: "description", done: false },
-  },
 ]
 
-const initialEdges: Edge[] = [
-  {
-    id: "edges-Title-Task1",
-    source: "Title",
-    target: "Task-1",
-    style: { stroke: "black", strokeWidth: 3 },
-  },
-  {
-    id: "edges-Task1-Issue1",
-    source: "Task-1",
-    target: "Issue-1",
-    style: { stroke: "black", strokeWidth: 3 },
-  },
-]
+const initialEdges: Edge[] = []
+
+const strokeStyle = { stroke: "black", strokeWidth: 3 }
 
 export const useStore = create<RFState>((set, get) => ({
   nodes: initialNodes,
@@ -127,12 +104,12 @@ export const useStore = create<RFState>((set, get) => ({
           id: timestamp,
           source: "Title",
           target: timestamp,
-          style: { stroke: "black", strokeWidth: 3 },
+          style: strokeStyle,
         },
       ],
     }))
   },
-  addIssueNode: (nodeId: string) => {
+  addIssueNode: (nodeId: string, position: { x: number; y: number }) => {
     const timestamp = new Date().getUTCMilliseconds().toString()
     set(state => ({
       nodes: [
@@ -140,7 +117,7 @@ export const useStore = create<RFState>((set, get) => ({
         {
           id: timestamp,
           type: "issueNode",
-          position: { x: 100, y: 800 },
+          position: { x: position.x, y: position.y + 400 },
           data: {
             title: "Title",
             description: "Description",
@@ -154,7 +131,7 @@ export const useStore = create<RFState>((set, get) => ({
           id: timestamp,
           source: nodeId,
           target: timestamp,
-          style: { stroke: "black", strokeWidth: 3 },
+          style: strokeStyle,
         },
       ],
     }))
