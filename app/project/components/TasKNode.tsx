@@ -1,12 +1,14 @@
 import { card } from "../../Styles/TailwindClasses"
-import { Handle, Position } from "reactflow"
+import { Handle, NodeProps, Position } from "reactflow"
 import { useStore } from "../../Context/store"
+import { NodeDataType } from "../../types/types"
 
-const TaskNode = ({ id, data }) => {
+const TaskNode = ({ id, data, xPos, yPos }: NodeProps<NodeDataType>) => {
   const updateNodeTitle = useStore(state => state.updateNodeTitle)
   const updateNodeDescription = useStore(state => state.updateNodeDescription)
   const updateNodeChecked = useStore(state => state.updateNodeChecked)
   const removeNode = useStore(state => state.removeNode)
+  const addIssueNode = useStore(state => state.addIssueNode)
   return (
     <div
       className={`${card} ${
@@ -46,6 +48,7 @@ const TaskNode = ({ id, data }) => {
           !data.done ? "border-black" : "border-gray-400"
         } TestTaskDescription`}
       ></textarea>
+      <button onClick={() => addIssueNode(id, { x: xPos, y: yPos })}>+</button>
       <Handle type="source" position={Position.Bottom} id="c" />
     </div>
   )

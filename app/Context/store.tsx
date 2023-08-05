@@ -22,6 +22,8 @@ type RFState = {
   updateNodeDescription: (nodeId: string, text: string) => void
   updateNodeChecked: (nodeId: string) => void
   removeNode: (nodeId: string) => void
+  addTaskNode: () => void
+  addIssueNode: (nodeId: string, position: { x: number; y: number }) => void
 }
 
 const initialNodes: Node[] = [
@@ -31,34 +33,11 @@ const initialNodes: Node[] = [
     position: { x: 0, y: 0 },
     data: null,
   },
-  {
-    id: "Task-1",
-    type: "taskNode",
-    position: { x: 12, y: 400 },
-    data: { title: "Title", description: "description", done: false },
-  },
-  {
-    id: "Issue-1",
-    type: "issueNode",
-    position: { x: 12, y: 800 },
-    data: { title: "Title", description: "description", done: false },
-  },
 ]
 
-const initialEdges: Edge[] = [
-  {
-    id: "edges-Title-Task1",
-    source: "Title",
-    target: "Task-1",
-    style: { stroke: "black", strokeWidth: 3 },
-  },
-  {
-    id: "edges-Task1-Issue1",
-    source: "Task-1",
-    target: "Issue-1",
-    style: { stroke: "black", strokeWidth: 3 },
-  },
-]
+const initialEdges: Edge[] = []
+
+const strokeStyle = { stroke: "black", strokeWidth: 3 }
 
 export const useStore = create<RFState>((set, get) => ({
   nodes: initialNodes,
@@ -72,7 +51,6 @@ export const useStore = create<RFState>((set, get) => ({
     set({
       nodes: get().nodes.map(node => {
         if (node.id === nodeId) {
-          // it's important to create a new object here, to inform React Flow about the cahnges
           node.data = { ...node.data, title: text }
         }
 
@@ -84,7 +62,6 @@ export const useStore = create<RFState>((set, get) => ({
     set({
       nodes: get().nodes.map(node => {
         if (node.id === nodeId) {
-          // it's important to create a new object here, to inform React Flow about the cahnges
           node.data = { ...node.data, description: text }
         }
 
@@ -104,6 +81,60 @@ export const useStore = create<RFState>((set, get) => ({
   },
   removeNode: (nodeId: string) => {
     set({ nodes: get().nodes.filter(node => node.id !== nodeId) })
+  },
+  addTaskNode: () => {
+    const timestamp = new Date().getUTCMilliseconds().toString()
+    set(state => ({
+      nodes: [
+        ...state.nodes,
+        {
+          id: timestamp,
+          type: "taskNode",
+          position: { x: 100, y: 400 },
+          data: {
+            title: "Title",
+            description: "Description",
+            done: false,
+          },
+        },
+      ],
+      edges: [
+        ...state.edges,
+        {
+          id: timestamp,
+          source: "Title",
+          target: timestamp,
+          style: strokeStyle,
+        },
+      ],
+    }))
+  },
+  addIssueNode: (nodeId: string, position: { x: number; y: number }) => {
+    const timestamp = new Date().getUTCMilliseconds().toString()
+    set(state => ({
+      nodes: [
+        ...state.nodes,
+        {
+          id: timestamp,
+          type: "issueNode",
+          position: { x: position.x, y: position.y + 400 },
+          data: {
+            title: "Title",
+            description: "Description",
+            done: false,
+          },
+        },
+      ],
+      edges: [
+        ...state.edges,
+        {
+          id: timestamp,
+          source: nodeId,
+          target: timestamp,
+          style: strokeStyle,
+        },
+      ],
+    }))
   },
 }))
 
