@@ -1,8 +1,9 @@
 import { Handle, Position } from "reactflow"
 import { card } from "../../Styles/TailwindClasses"
+import { useStore } from "../../Context/store"
 
-const IssueNode = ({ data }) => {
-  console.log(data)
+const IssueNode = ({ id, data }) => {
+  const updateNodeTitle = useStore(state => state.updateNodeTitle)
   return (
     <div
       className={`${card} ${
@@ -23,6 +24,7 @@ const IssueNode = ({ data }) => {
       <input
         type="text"
         value={data.title}
+        onChange={evt => updateNodeTitle(id, evt.target.value)}
         className={`mb-2 p-2 rounded border ${
           !data.done ? "border-black" : "border-gray-400"
         } TestIssueTitle text-ellipsis overflow-hidden`}

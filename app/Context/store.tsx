@@ -3,17 +3,11 @@
 import { ReactNode, createContext, useContext, useState } from "react"
 import { create } from "zustand"
 import {
-  Connection,
   Edge,
-  EdgeChange,
   Node,
   NodeChange,
-  addEdge,
   OnNodesChange,
-  OnEdgesChange,
-  OnConnect,
   applyNodeChanges,
-  applyEdgeChanges,
 } from "reactflow"
 import { StreamContextProps } from "../types/types"
 import sanitise from "../../utils/sanitise"
@@ -24,8 +18,6 @@ type RFState = {
   nodes: Node[]
   edges: Edge[]
   onNodesChange: OnNodesChange
-  onEdgesChange: OnEdgesChange
-  onConnect: OnConnect
   updateNodeTitle: (nodeId: string, text: string) => void
 }
 
@@ -71,16 +63,6 @@ export const useStore = create<RFState>((set, get) => ({
   onNodesChange: (changes: NodeChange[]) => {
     set({
       nodes: applyNodeChanges(changes, get().nodes),
-    })
-  },
-  onEdgesChange: (changes: EdgeChange[]) => {
-    set({
-      edges: applyEdgeChanges(changes, get().edges),
-    })
-  },
-  onConnect: (connection: Connection) => {
-    set({
-      edges: addEdge(connection, get().edges),
     })
   },
   updateNodeTitle: (nodeId: string, text: string) => {
