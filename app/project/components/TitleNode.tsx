@@ -35,7 +35,13 @@ const TitleNode = ({ data }) => {
             Submit
           </button>
         </form>
-        <button onClick={() => addTaskNode()}>+</button>
+
+        <button
+          className="border border-black bg-gray-50 p-1.5 rounded ml-5"
+          onClick={() => addTaskNode()}
+        >
+          +
+        </button>
       </div>
       <Handle type="source" position={Position.Bottom} id="a" />
     </>
