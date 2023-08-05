@@ -6,10 +6,11 @@ const TaskNode = ({ id, data }) => {
   const updateNodeTitle = useStore(state => state.updateNodeTitle)
   const updateNodeDescription = useStore(state => state.updateNodeDescription)
   const updateNodeChecked = useStore(state => state.updateNodeChecked)
+  const removeNode = useStore(state => state.removeNode)
   return (
     <div
       className={`${card} ${
-        !data.done ? "bg-teal-50" : "bg-teal-50 text-gray-400"
+        !data.done ? "bg-teal-50" : "bg-slate-50 text-gray-400"
       } flex flex-col TestTaskId text-ellipsis`}
     >
       <Handle type="target" position={Position.Top} id="b" />
@@ -20,7 +21,11 @@ const TaskNode = ({ id, data }) => {
           onChange={() => updateNodeChecked(id)}
           className={`TestTaskCheckbox cursor-pointer`}
         ></input>
-        <button type="button" className={`TestTaskDelete`}>
+        <button
+          onClick={() => removeNode(id)}
+          type="button"
+          className={`TestTaskDelete`}
+        >
           ✖
         </button>
       </div>

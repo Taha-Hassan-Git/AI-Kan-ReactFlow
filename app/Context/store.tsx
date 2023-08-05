@@ -21,6 +21,7 @@ type RFState = {
   updateNodeTitle: (nodeId: string, text: string) => void
   updateNodeDescription: (nodeId: string, text: string) => void
   updateNodeChecked: (nodeId: string) => void
+  removeNode: (nodeId: string) => void
 }
 
 const initialNodes: Node[] = [
@@ -100,6 +101,9 @@ export const useStore = create<RFState>((set, get) => ({
         return node
       }),
     })
+  },
+  removeNode: (nodeId: string) => {
+    set({ nodes: get().nodes.filter(node => node.id !== nodeId) })
   },
 }))
 

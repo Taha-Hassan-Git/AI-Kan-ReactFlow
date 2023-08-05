@@ -6,10 +6,11 @@ const IssueNode = ({ id, data }) => {
   const updateNodeTitle = useStore(state => state.updateNodeTitle)
   const updateNodeDescription = useStore(state => state.updateNodeDescription)
   const updateNodeChecked = useStore(state => state.updateNodeChecked)
+  const removeNode = useStore(state => state.removeNode)
   return (
     <div
       className={`${card} ${
-        !data.done ? "bg-pink-50" : "bg-pink-50 text-gray-400"
+        !data.done ? "bg-pink-50" : "bg-slate-50 text-gray-400"
       } flex flex-col mb-4 border-none TestIssueId-j`}
     >
       <Handle type="target" position={Position.Top} id="d" />
@@ -20,7 +21,11 @@ const IssueNode = ({ id, data }) => {
           onChange={() => updateNodeChecked(id)}
           className={`TestIssueCheckbox cursor-pointer`}
         ></input>
-        <button type="button" className={`TestIssueDelete`}>
+        <button
+          onClick={() => removeNode(id)}
+          type="button"
+          className={`TestIssueDelete`}
+        >
           ✖
         </button>
       </div>
