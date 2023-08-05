@@ -1,11 +1,16 @@
 import { card } from "../../Styles/TailwindClasses"
 import { Handle, Position } from "reactflow"
+import { useStore } from "../../Context/store"
 
-const TaskNode = ({ data }) => {
+const TaskNode = ({ id, data }) => {
+  const updateNodeTitle = useStore(state => state.updateNodeTitle)
+  const updateNodeDescription = useStore(state => state.updateNodeDescription)
+  const updateNodeChecked = useStore(state => state.updateNodeChecked)
+  const removeNode = useStore(state => state.removeNode)
   return (
     <div
       className={`${card} ${
-        !data.done ? "bg-teal-50" : "bg-teal-50 text-gray-400"
+        !data.done ? "bg-teal-50" : "bg-slate-50 text-gray-400"
       } flex flex-col TestTaskId text-ellipsis`}
     >
       <Handle type="target" position={Position.Top} id="b" />
@@ -13,9 +18,14 @@ const TaskNode = ({ data }) => {
         <input
           type="checkbox"
           checked={data.done}
+          onChange={() => updateNodeChecked(id)}
           className={`TestTaskCheckbox cursor-pointer`}
         ></input>
-        <button type="button" className={`TestTaskDelete`}>
+        <button
+          onClick={() => removeNode(id)}
+          type="button"
+          className={`TestTaskDelete`}
+        >
           ✖
         </button>
       </div>
@@ -25,11 +35,13 @@ const TaskNode = ({ data }) => {
           !data.done ? "border-black" : "border-gray-400"
         } TestTaskTitle`}
         value={data.title}
+        onChange={evt => updateNodeTitle(id, evt.target.value)}
       />
       <textarea
         rows={5}
         cols={20}
         value={data.description}
+        onChange={evt => updateNodeDescription(id, evt.target.value)}
         className={`mb-2 p-2 resize-none rounded border ${
           !data.done ? "border-black" : "border-gray-400"
         } TestTaskDescription`}

@@ -4,52 +4,22 @@ import ReactFlow, {
   BackgroundVariant,
   Controls,
   Panel,
-  addEdge,
-  useEdgesState,
-  useNodesState,
 } from "reactflow"
-import { useCallback } from "react"
 import "reactflow/dist/style.css"
 import TitleNode from "./TitleNode"
 import { useStreamContext } from "../../Context/store"
 import TaskNode from "./TasKNode"
 import IssueNode from "./IssueNode"
+import { shallow } from "zustand/shallow"
+import { useStore } from "../../Context/store"
 
-const initialNodes = [
-  {
-    id: "Title",
-    type: "titleNode",
-    position: { x: 0, y: 0 },
-    data: null,
-  },
-  {
-    id: "Task-1",
-    type: "taskNode",
-    position: { x: 12, y: 400 },
-    data: { title: "Title", description: "description", done: false },
-  },
-  {
-    id: "Issue-1",
-    type: "issueNode",
-    position: { x: 12, y: 800 },
-    data: { title: "Title", description: "description", done: false },
-  },
-]
-
-const initialEdges = [
-  {
-    id: "edges-Title-Task1",
-    source: "Title",
-    target: "Task-1",
-    style: { stroke: "black", strokeWidth: 3 },
-  },
-  {
-    id: "edges-Task1-Issue1",
-    source: "Task-1",
-    target: "Issue-1",
-    style: { stroke: "black", strokeWidth: 3 },
-  },
-]
+const selector = state => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+})
 
 const nodeTypes = {
   titleNode: TitleNode,
@@ -58,17 +28,9 @@ const nodeTypes = {
 }
 
 function Project() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
-
-  const onConnect = useCallback(
-    connection => setEdges(eds => addEdge(connection, eds)),
-    [setEdges]
-  )
-
   const streamContext = useStreamContext()
   const stream = streamContext?.stream
+  const { nodes, edges, onNodesChange } = useStore(selector, shallow)
 
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
@@ -76,8 +38,6 @@ function Project() {
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
       >
