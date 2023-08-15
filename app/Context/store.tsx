@@ -89,21 +89,25 @@ export const useStore = create<RFState>((set, get) => ({
           if (parent === "Title" && children.includes(node.id)) {
             node.data = { ...node.data, done: newDone }
           }
-          if (parent !== "Title" && node.id === parent) {
-            // const allSiblings = node.data.children
-            // if(allSiblings.length === 0) return
-            // const areAllSiblingsDone = allSiblings.every(childId => {
-            //   get().nodes.find(childNode => childNode.id === childId)?.data.done || false
-            // })
-            // node.data = { ...node.data, done: areAllSiblingsDone }
-            node.data = {...node.data, done: newDone}
-          }
-          console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!${parent}!!!!!!!!!!!!!!!!!!!!!!`)
           return node
         })
-        // .map(node => {
-        //   return node
-        // }),
+        .map(node => {
+          if (
+            parent !== "Title" &&
+            node.id === parent &&
+            node.data.children.length > 0
+          ) {
+            const allSiblings: boolean[] = []
+            get().nodes.map(childNode => {
+              if (node.data.children.includes(childNode.id)) {
+                allSiblings.push(childNode.data.done)
+              }
+            })
+            const areAllSiblingsDone = allSiblings.every(done => done)
+            node.data = { ...node.data, done: areAllSiblingsDone }
+          }
+          return node
+        }),
     })
   },
   removeNode: (nodeId: string) => {
