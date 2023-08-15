@@ -3,6 +3,7 @@ import { card } from "../../Styles/TailwindClasses"
 import { useStreamContext, useStore } from "../../Context/store"
 
 const TitleNode = ({ data }) => {
+  console.log(data)
   const { onSubmit, projectInput, setProjectInput } = useStreamContext()
   const addTaskNode = useStore(state => state.addTaskNode)
   return (
