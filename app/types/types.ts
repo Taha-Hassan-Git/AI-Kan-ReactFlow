@@ -2,6 +2,8 @@ export interface NodeDataType {
   title: string
   description: string
   done: boolean
+  parent: string
+  children: string[]
 }
 
 export interface StreamContextProps {

@@ -20,7 +20,7 @@ type RFState = {
   onNodesChange: OnNodesChange
   updateNodeTitle: (nodeId: string, text: string) => void
   updateNodeDescription: (nodeId: string, text: string) => void
-  updateNodeChecked: (nodeId: string) => void
+  updateNodeChecked: (nodeId: string, allChildren: string[], parent: string, done: boolean) => void
   removeNode: (nodeId: string) => void
   addTaskNode: () => void
   addIssueNode: (nodeId: string, position: { x: number; y: number }) => void
@@ -65,16 +65,21 @@ export const useStore = create<RFState>((set, get) => ({
         if (node.id === nodeId) {
           node.data = { ...node.data, description: text }
         }
-
         return node
       }),
     })
   },
-  updateNodeChecked: (nodeId: string) => {
+  updateNodeChecked: (nodeId: string, children: string[], parent: string, newDone: boolean) => {
     set({
       nodes: get().nodes.map(node => {
         if (node.id === nodeId) {
           node.data = { ...node.data, done: !node.data.done }
+        }
+        if(node.id === parent && parent !== 'Title'){
+          console.log('💩')
+        }
+        if(newDone && children.includes(node.id)){
+          node.data = {...node.data, done: newDone}
         }
         return node
       }),

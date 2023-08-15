@@ -20,7 +20,7 @@ const TaskNode = ({ id, data, xPos, yPos }: NodeProps<NodeDataType>) => {
         <input
           type="checkbox"
           checked={data.done}
-          onChange={() => updateNodeChecked(id)}
+          onChange={() => updateNodeChecked(id, data.children, data.parent, !data.done)}
           className={`TestTaskCheckbox cursor-pointer`}
         ></input>
         <button

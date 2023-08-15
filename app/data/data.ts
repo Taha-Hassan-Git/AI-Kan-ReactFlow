@@ -35,6 +35,8 @@ export const exampleProject = {
         title: "Take a walk",
         description: "Go into the countryside and have a nice walk",
         done: false,
+        parent: 'Title',
+        children: ['155', '626'],
       },
       width: 238,
       height: 286,
