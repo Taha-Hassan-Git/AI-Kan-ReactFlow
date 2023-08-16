@@ -80,35 +80,29 @@ export const useStore = create<RFState>((set, get) => ({
     parent: string,
     newDone: boolean
   ) => {
-    set({
-      nodes: get()
-        .nodes.map(node => {
-          if (node.id === nodeId) {
-            node.data = { ...node.data, done: newDone }
-          }
-          if (parent === "Title" && children.includes(node.id)) {
-            node.data = { ...node.data, done: newDone }
-          }
-          return node
-        })
-        .map(node => {
-          if (
-            parent !== "Title" &&
-            node.id === parent &&
-            node.data.children.length > 0
-          ) {
-            const allSiblings: boolean[] = []
-            get().nodes.map(childNode => {
-              if (node.data.children.includes(childNode.id)) {
-                allSiblings.push(childNode.data.done)
-              }
-            })
-            const areAllSiblingsDone = allSiblings.every(done => done)
-            node.data = { ...node.data, done: areAllSiblingsDone }
-          }
-          return node
-        }),
+    const updatedNodes = get().nodes.map(node => {
+      // update checked node and all associated children if it is a TaskNode
+      if (
+        node.id === nodeId ||
+        (parent === "Title" && children.includes(node.id))
+      ) {
+        node.data = { ...node.data, done: newDone }
+      }
+      return node
     })
+    // if checked node is an IssueNode, find it's associated TaskNode and update it
+    if (parent !== "Title") {
+      const parentToUpdate = updatedNodes.find(node => node.id === parent)
+      if (parentToUpdate && parentToUpdate.data.children.length > 0) {
+        const allSiblingsDone = parentToUpdate.data.children.every(childId => {
+          const childNode = updatedNodes.find(node => node.id === childId)
+          return childNode?.data.done
+        })
+        parentToUpdate.data = { ...parentToUpdate.data, done: allSiblingsDone }
+      }
+    }
+    // set entire state
+    set({ nodes: updatedNodes })
   },
   removeNode: (nodeId: string) => {
     set({ nodes: get().nodes.filter(node => node.id !== nodeId) })
