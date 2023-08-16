@@ -94,10 +94,12 @@ export const useStore = create<RFState>((set, get) => ({
     if (parent !== "Title") {
       const updatedParent = updatedNodes.find(node => node.id === parent)
       if (updatedParent && updatedParent.data.children.length > 0) {
-        const areAllSiblingsDone = updatedParent.data.children.every(childId => {
-          const childNode = updatedNodes.find(node => node.id === childId)
-          return childNode?.data.done
-        })
+        const areAllSiblingsDone = updatedParent.data.children.every(
+          childId => {
+            const childNode = updatedNodes.find(node => node.id === childId)
+            return childNode?.data.done
+          }
+        )
         updatedParent.data = { ...updatedParent.data, done: areAllSiblingsDone }
       }
     }
