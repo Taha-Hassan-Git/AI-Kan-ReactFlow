@@ -90,15 +90,15 @@ export const useStore = create<RFState>((set, get) => ({
       }
       return node
     })
-    // if checked node is an IssueNode, find it's associated TaskNode and update it
+    // if checked node is an IssueNode, find its associated TaskNode and update it
     if (parent !== "Title") {
-      const parentToUpdate = updatedNodes.find(node => node.id === parent)
-      if (parentToUpdate && parentToUpdate.data.children.length > 0) {
-        const allSiblingsDone = parentToUpdate.data.children.every(childId => {
+      const updatedParent = updatedNodes.find(node => node.id === parent)
+      if (updatedParent && updatedParent.data.children.length > 0) {
+        const areAllSiblingsDone = updatedParent.data.children.every(childId => {
           const childNode = updatedNodes.find(node => node.id === childId)
           return childNode?.data.done
         })
-        parentToUpdate.data = { ...parentToUpdate.data, done: allSiblingsDone }
+        updatedParent.data = { ...updatedParent.data, done: areAllSiblingsDone }
       }
     }
     // set entire state
