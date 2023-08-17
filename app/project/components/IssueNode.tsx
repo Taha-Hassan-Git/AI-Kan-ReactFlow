@@ -22,7 +22,7 @@ const IssueNode = ({ id, data }) => {
           className={`TestIssueCheckbox cursor-pointer`}
         ></input>
         <button
-          onClick={() => removeNode(id)}
+          onClick={() => removeNode(id, data.children, data.parent)}
           type="button"
           className={`TestIssueDelete`}
         >

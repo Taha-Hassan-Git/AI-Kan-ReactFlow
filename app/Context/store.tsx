@@ -21,7 +21,7 @@ type RFState = {
   updateNodeTitle: (nodeId: string, text: string) => void
   updateNodeDescription: (nodeId: string, text: string) => void
   updateNodeChecked: (nodeId: string) => void
-  removeNode: (nodeId: string) => void
+  removeNode: (nodeId: string, children: string[], parent: string) => void
   addTaskNode: () => void
   addIssueNode: (nodeId: string, position: { x: number; y: number }) => void
   setProject: (project: { nodes: Node[]; edges: Edge[] }) => void
@@ -80,8 +80,24 @@ export const useStore = create<RFState>((set, get) => ({
       }),
     })
   },
-  removeNode: (nodeId: string) => {
-    set({ nodes: get().nodes.filter(node => node.id !== nodeId) })
+  removeNode: (nodeId: string, children: string[], parent: string) => {
+    // remove the target node and any children
+    const updatedNodes = get().nodes.filter(
+      node => node.id !== nodeId && !children.includes(node.id)
+    )
+    // update the 'children' property of the parent of our target node if the target was an IssueNode
+    if (parent !== "Title") {
+      updatedNodes.map(node => {
+        if (node.id === parent) {
+          node.data = {
+            ...node.data,
+            children: node.data.children.filter(child => child.id !== nodeId),
+          }
+        }
+      })
+    }
+    // update state
+    set({ nodes: updatedNodes })
   },
   addTaskNode: () => {
     const timestamp = new Date().getUTCMilliseconds().toString()
