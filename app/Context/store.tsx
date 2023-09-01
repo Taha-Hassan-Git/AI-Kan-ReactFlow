@@ -20,7 +20,12 @@ type RFState = {
   onNodesChange: OnNodesChange
   updateNodeTitle: (nodeId: string, text: string) => void
   updateNodeDescription: (nodeId: string, text: string) => void
-  updateNodeChecked: (nodeId: string) => void
+  updateNodeChecked: (
+    nodeId: string,
+    allChildren: string[],
+    parent: string,
+    done: boolean
+  ) => void
   removeNode: (nodeId: string) => void
   addTaskNode: () => void
   addIssueNode: (nodeId: string, position: { x: number; y: number }) => void
@@ -65,20 +70,41 @@ export const useStore = create<RFState>((set, get) => ({
         if (node.id === nodeId) {
           node.data = { ...node.data, description: text }
         }
-
         return node
       }),
     })
   },
-  updateNodeChecked: (nodeId: string) => {
-    set({
-      nodes: get().nodes.map(node => {
-        if (node.id === nodeId) {
-          node.data = { ...node.data, done: !node.data.done }
-        }
-        return node
-      }),
+  updateNodeChecked: (
+    nodeId: string,
+    children: string[],
+    parent: string,
+    newDone: boolean
+  ) => {
+    const updatedNodes = get().nodes.map(node => {
+      // update checked node and all associated children if it is a TaskNode
+      if (
+        node.id === nodeId ||
+        (parent === "Title" && children.includes(node.id))
+      ) {
+        node.data = { ...node.data, done: newDone }
+      }
+      return node
     })
+    // if checked node is an IssueNode, find its associated TaskNode and update it
+    if (parent !== "Title") {
+      const updatedParent = updatedNodes.find(node => node.id === parent)
+      if (updatedParent && updatedParent.data.children.length > 0) {
+        const areAllSiblingsDone = updatedParent.data.children.every(
+          childId => {
+            const childNode = updatedNodes.find(node => node.id === childId)
+            return childNode?.data.done
+          }
+        )
+        updatedParent.data = { ...updatedParent.data, done: areAllSiblingsDone }
+      }
+    }
+    // set entire state
+    set({ nodes: updatedNodes })
   },
   removeNode: (nodeId: string) => {
     set({ nodes: get().nodes.filter(node => node.id !== nodeId) })
