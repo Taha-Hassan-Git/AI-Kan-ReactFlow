@@ -18,7 +18,9 @@ const IssueNode = ({ id, data }) => {
         <input
           type="checkbox"
           checked={data.done}
-          onChange={() => updateNodeChecked(id)}
+          onChange={() =>
+            updateNodeChecked(id, data.children, data.parent, !data.done)
+          }
           className={`TestIssueCheckbox cursor-pointer`}
         ></input>
         <button
