@@ -26,7 +26,7 @@ const TaskNode = ({ id, data, xPos, yPos }: NodeProps<NodeDataType>) => {
           className={`TestTaskCheckbox cursor-pointer`}
         ></input>
         <button
-          onClick={() => removeNode(id)}
+          onClick={() => removeNode(id, data.children, data.parent)}
           type="button"
           className={`TestTaskDelete`}
         >
